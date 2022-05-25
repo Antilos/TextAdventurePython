@@ -6,12 +6,12 @@ from command import Command
 from custom_commands import MoveCommand
 
 if __name__ == '__main__':
-    cmd = Command("test")
-    move = MoveCommand("move")
+    cmd = Command("test", lambda game_instance, y: print("Test Command"), lambda s : s)
+    # move = MoveCommand("move")
 
     cmds = [
         cmd,
-        move,
+        # move,
     ]
 
     room1 = Room("test_room", "This is a test room")
@@ -33,8 +33,6 @@ if __name__ == '__main__':
     for room, exits in rooms:
         for exit in exits:
             room_graph.add_edge(room.name, exit.name, state="open")
-
-    print(room_graph)
 
     game = Game(cmds, room_graph, room, input_parser=lambda x : (x.split()[0], x.split()[1:]) if x else None, welcome_message="Hello to the test game")
 

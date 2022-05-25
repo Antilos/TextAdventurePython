@@ -12,8 +12,8 @@ class Game():
             room_graph:Graph,
             starting_room:Room,
             input_parser:Callable[[str], tuple[str, list[str]]],
-            welcome_message = None,
-            starting_room_index = 0
+            welcome_message:Optional[str] = None,
+            unknown_cmd_msg:str = "Unknown Command",
         ) -> None:
 
         self.commands = {cmd.command:cmd for cmd in commands}
@@ -23,7 +23,7 @@ class Game():
 
         self.current_room = starting_room
 
-        self.unknown_cmd_msg = "Unknown Command"
+        self.unknown_cmd_msg = unknown_cmd_msg
 
     @property
     def current_room(self) -> Room:
@@ -62,6 +62,8 @@ class Game():
                     cmd(self, args)
                 except KeyError:
                     print(self.unknown_cmd_msg)
+                except ValueError:
+                    print(f"[DEBUG] wrong number of params. {self.unknown_cmd_msg}")
             else:
                 print(self.unknown_cmd_msg)
 
@@ -102,8 +104,6 @@ if __name__ == '__main__':
     for room, exits in rooms:
         for exit in exits:
             room_graph.add_edge(room.name, exit.name, state="open")
-
-    print(room_graph)
 
     game = Game(cmds, room_graph, room, input_parser=lambda x : (x.split()[0], x.split()[1:]) if x else None, welcome_message="Hello to the test game")
 
