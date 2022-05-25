@@ -42,7 +42,24 @@ if __name__ == '__main__':
 
     room_graph = create_room_graph(rooms)
 
+    c = 1
+    components = {
+        'c':c
+    }
+
     input_parser = lambda x : (x.split()[0], " ".join(x.split()[1:])) if x else None
-    game = Game(cmds, room_graph, room1, input_parser=input_parser, welcome_message="Hello to the test game")
+
+    game = Game(
+        commands=cmds,
+        room_graph=room_graph,
+        starting_room=room1,
+        components=components,
+        input_parser=input_parser,
+        welcome_message="Hello to the test game"
+    )
+
+    print(game.c)
+    game.c=2
+    print(game.c)
 
     game.start()

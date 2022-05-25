@@ -1,5 +1,5 @@
 from re import split
-from typing import Callable, Optional
+from typing import Callable, Optional, Any
 from igraph import Graph
 
 from room import Room
@@ -12,6 +12,8 @@ class Game():
             room_graph:Graph,
             starting_room:Room,
             input_parser:Callable[[str], tuple[str, str]],
+
+            components:Optional[dict[str, Any]]=None,
             welcome_message:Optional[str] = None,
             unknown_cmd_msg:str = "Unknown Command",
             room_description_on_enter:str = 'long'
@@ -26,6 +28,10 @@ class Game():
 
         self.unknown_cmd_msg = unknown_cmd_msg
         self.room_description_on_enter = room_description_on_enter
+
+        if components != None:
+            for component_name, component in components.items():
+                setattr(self, component_name, component)
 
     @property
     def current_room(self) -> Room:
