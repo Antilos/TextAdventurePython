@@ -11,9 +11,10 @@ class Game():
             commands:list[Command],
             room_graph:Graph,
             starting_room:Room,
-            input_parser:Callable[[str], tuple[str, list[str]]],
+            input_parser:Callable[[str], tuple[str, str]],
             welcome_message:Optional[str] = None,
             unknown_cmd_msg:str = "Unknown Command",
+            room_description_on_enter:str = 'long'
         ) -> None:
 
         self.commands = {cmd.command:cmd for cmd in commands}
@@ -24,6 +25,7 @@ class Game():
         self.current_room = starting_room
 
         self.unknown_cmd_msg = unknown_cmd_msg
+        self.room_description_on_enter = room_description_on_enter
 
     @property
     def current_room(self) -> Room:
@@ -36,6 +38,10 @@ class Game():
 
     def change_room(self, room):
         self.current_room = room
+        if self.room_description_on_enter == 'long':
+            print(room.description)
+        elif self.room_description_on_enter == 'short':
+            print(room.short_description)
 
     def get_room_by_name(self, room_name):
         try:
@@ -49,7 +55,7 @@ class Game():
         except ValueError:
             return None
 
-    def get_command(self) -> tuple[Command, list]:
+    def get_command(self) -> tuple[Command, str]:
         player_input = input(">")
         return self.input_parser(player_input)
 

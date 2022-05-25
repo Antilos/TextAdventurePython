@@ -4,24 +4,9 @@ from game import Game
 from room import Room
 from command import Command
 from custom_commands import MoveCommand
+from built_in_commands import move_command
 
-if __name__ == '__main__':
-    cmd = Command("test", lambda game_instance, y: print("Test Command"), lambda s : s)
-    # move = MoveCommand("move")
-
-    cmds = [
-        cmd,
-        # move,
-    ]
-
-    room1 = Room("test_room", "This is a test room")
-    room2 = Room("room2", "This is a second room")
-
-    rooms = [
-        (room1, [room2]),
-        (room2, []),
-    ]
-
+def create_room_graph(rooms:list[tuple[Room, list[Room]]]):
     room_graph = Graph(
         n = len(rooms),
     )
@@ -34,6 +19,30 @@ if __name__ == '__main__':
         for exit in exits:
             room_graph.add_edge(room.name, exit.name, state="open")
 
-    game = Game(cmds, room_graph, room, input_parser=lambda x : (x.split()[0], x.split()[1:]) if x else None, welcome_message="Hello to the test game")
+    return room_graph
+
+if __name__ == '__main__':
+    test_cmd_method = lambda game_instance, y: print(f"Test Command {y}")
+    test_cmd_parser = lambda s : s
+    cmd = Command("test", method=test_cmd_method, parser=test_cmd_parser)
+    move = move_command
+
+    cmds = [
+        cmd,
+        move,
+    ]
+
+    room1 = Room("test_room", "This is a test room")
+    room2 = Room("room2", "This is a second room")
+
+    rooms = [
+        (room1, [room2]),
+        (room2, []),
+    ]
+
+    room_graph = create_room_graph(rooms)
+
+    input_parser = lambda x : (x.split()[0], " ".join(x.split()[1:])) if x else None
+    game = Game(cmds, room_graph, room1, input_parser=input_parser, welcome_message="Hello to the test game")
 
     game.start()
