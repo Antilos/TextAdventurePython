@@ -32,3 +32,44 @@ def exit_command_parser(args:str) -> list:
     return []
 
 exit_command = Command('exit', exit_command_method, exit_command_parser)
+
+def take_command_method(game_instance:'Game', item_name) -> None:
+    item = game_instance.current_room.inventory.remove_item(item_name)
+    if item:
+        game_instance.player.inventory.add_item(item)
+        print(f"You take {item_name}")
+    else:
+        print(f"There is no {item_name} to take")
+
+def take_command_parser(args:str) -> list:
+    return args.split()[:1]
+
+take_command = Command('take', take_command_method, take_command_parser)
+
+def drop_command_method(game_instance:'Game', item_name) -> None:
+    item = game_instance.player.inventory.remove_item(item_name)
+    if item:
+        game_instance.current_room.inventory.add_item(item)
+        print(f"You dropped {item_name}")
+    else:
+        print(f"You don't have any {item_name}")
+
+def drop_command_parser(args:str) -> list:
+    return args.split()[:1]
+
+drop_command = Command('drop', drop_command_method, drop_command_parser)
+
+def use_item_command_method(game_instance:'Game', item_name) -> None:
+    #TODO: Use items in rooms
+    item = game_instance.player.inventory.get_item(item_name)
+    if item:
+        item.use(game_instance)
+        if item.is_consumable:
+            game_instance.player.inventory.remove_item(item_name)
+    else:
+        print(f"You don't have any {item_name}")
+
+def use_item_command_parser(args:str) -> list:
+    return args.split()[:1]
+
+use_item_command = Command('use', use_item_command_method, use_item_command_parser)

@@ -1,10 +1,13 @@
 from igraph import Graph
+from components.items import CoinItem
+from components.player import Player
 
 from game import Game
 from room import Room
 from command import Command
 from custom_commands import MoveCommand
-from built_in_commands import move_command, exit_command
+
+from built_in_commands import move_command, exit_command, take_command, drop_command, use_item_command
 
 def create_room_graph(rooms:list[tuple[Room, list[Room]]]):
     room_graph = Graph(
@@ -31,10 +34,15 @@ if __name__ == '__main__':
         cmd,
         move,
         exit_command,
+        take_command,
+        drop_command,
+        use_item_command
     ]
 
     room1 = Room("test_room", "This is a test room")
     room2 = Room("room2", "This is a second room")
+
+    room1.inventory.add_item(CoinItem())
 
     rooms = [
         (room1, [room2]),
@@ -43,9 +51,8 @@ if __name__ == '__main__':
 
     room_graph = create_room_graph(rooms)
 
-    c = 1
     components = {
-        'c':c
+        'player':Player()
     }
 
     input_parser = lambda x : (x.split()[0], " ".join(x.split()[1:])) if x else None
