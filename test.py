@@ -4,7 +4,7 @@ from game import Game
 from room import Room
 from command import Command
 from custom_commands import MoveCommand
-from built_in_commands import move_command
+from built_in_commands import move_command, exit_command
 
 def create_room_graph(rooms:list[tuple[Room, list[Room]]]):
     room_graph = Graph(
@@ -30,6 +30,7 @@ if __name__ == '__main__':
     cmds = [
         cmd,
         move,
+        exit_command,
     ]
 
     room1 = Room("test_room", "This is a test room")
@@ -57,9 +58,5 @@ if __name__ == '__main__':
         input_parser=input_parser,
         welcome_message="Hello to the test game"
     )
-
-    print(game.c)
-    game.c=2
-    print(game.c)
 
     game.start()

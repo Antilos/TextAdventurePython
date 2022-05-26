@@ -24,3 +24,11 @@ def move_command_parser(args:str) -> list:
     return args.split()[:1]
 
 move_command = Command('move', move_command_method, move_command_parser)
+
+def exit_command_method(game_instance:'Game') -> None:
+    game_instance.exit()
+
+def exit_command_parser(args:str) -> list:
+    return []
+
+exit_command = Command('exit', exit_command_method, exit_command_parser)

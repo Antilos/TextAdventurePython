@@ -21,7 +21,7 @@ class Command():
 
     def __call__(self, game_instance, args:str) -> None:
         params = self.parser(args)
-        if params:
+        if params != None:
             if num_parser_params := len(params) == self.num_params:
                 self.method(game_instance, *params)
             else:
